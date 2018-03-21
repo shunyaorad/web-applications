@@ -1,0 +1,330 @@
+.video-url {
+    margin: 10% 0;
+}
+
+#video-content {
+    position: relative;
+    margin: 0 0;
+    overflow: hidden;
+    padding: 0 0;
+    width: 100%;
+    height: 100%;
+}
+
+.vid-comment {
+    position: absolute;
+    top: 0;
+    right: -100px;
+    width: 200px;
+    color: #fff;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.vid-comment a {
+    color: #fff;
+    display: inline-block;
+}
+
+/* top of movie player*/
+.room-title {
+    display: inline;
+    font-size: 30px;
+}
+
+a.control-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-right: 0;
+    display: inline-block;
+    float: right;
+
+}
+
+a.control-button#in-sync-button {
+    display: none;
+}
+
+a.control-button#in-sync-button.show {
+    display: inline-block;
+}
+
+i {
+    padding-right: 5px;
+}
+
+.fa-times {
+    color: rgb(0, 0, 0);
+    -webkit-transition: 0.6s ease-out;
+    -moz-transition: 0.6s ease-out;
+    transition: 0.6s ease-out;
+}
+
+.fa-times:hover {
+    opacity: 1.0;
+    color: crimson;
+}
+
+button#info-modal-close {
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+/*****************************
+
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+#wrapper {
+    padding-right: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled {
+    padding-right: 400px;
+}
+
+.sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    right: 400px;
+    width: 0;
+    height: 100%;
+    margin-right: -400px;
+    /*overflow-y: auto;*/
+    overflow-x: hidden;
+    background: #F5F5F5;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+#wrapper.toggled .sidebar-wrapper {
+    width: 400px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+}
+
+/* Sidebar Styles */
+
+#visitors-sidebar, #comments-sidebar, #chatroom-sidebar {
+    /*visibility: hidden;*/
+    display: none;
+}
+
+#visitors-sidebar.toggled, #comments-sidebar.toggled, #chatroom-sidebar.toggled {
+    display: block;
+    visibility: visible;
+}
+
+.sidebar-title {
+    font-size: 22px;
+    padding: 10px 0 5px 10px;
+}
+
+.sidebar-nav {
+    /*position: absolute;*/
+    top: 0;
+    width: 400px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #111111;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    background: #EBEBEB;
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+    padding-left: 10px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #111111;
+}
+
+@media (min-width: 768px) {
+    #wrapper {
+        padding-right: 0;
+    }
+
+    #wrapper.toggled {
+        padding-right: 400px;
+    }
+
+    .sidebar-wrapper {
+        width: 0;
+    }
+
+    #wrapper.toggled .sidebar-wrapper {
+        width: 400px;
+    }
+
+    #page-content-wrapper {
+        padding: 0px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+
+.room-header {
+    padding: 0;
+}
+
+/**** Slider Layout Popup *********/
+.sidebar-user-box {
+    vertical-align: middle;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.sidebar-username {
+    float: left;
+    transform: translateY(25%);
+    margin-left: 10px;
+}
+
+.sidebar-user-photo {
+    transform: translateY(18%);
+    margin-left: 10px;
+}
+
+.sidebar-userstatus {
+    color: black;
+    float: right;
+    padding-right: 10px;
+    transform: translateY(25%);
+    margin-left: 10px;
+}
+
+.sidebar-userstatus.offline {
+    color: gray;
+}
+
+.sidebar-userstatus.online {
+    color: green;
+}
+
+.sidebar-userstatus.busy {
+    color: yellow;
+}
+
+.sidebar-userstatus.sync {
+    color: red;
+}
+
+.sidebar-user-box:hover {
+    background-color: #EBEBEB;
+}
+
+.sidebar-user-box.toggled {
+    background-color: #EBEBEB;
+}
+
+.sidebar-user-box:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    float: left;
+}
+
+.visitors-buttons {
+    position: absolute; /* Sit on top of the screen */
+    min-width: 390px; /* Set a default minimum width */
+    visibility: hidden;
+    top: 87%;
+}
+
+.visitors-buttons.show {
+    visibility: visible;
+}
+
+#sync-button {
+    /*visibility: hidden; !* Hidden by default. Visible on click *!*/
+    min-width: 185px; /* Set a default minimum width */
+    text-align: center; /* Centered text */
+    padding: 16px; /* Padding */
+    position: relative; /* Sit on top of the screen */
+    /*!*z-index: 1; !* Add a z-index if needed *!*!*/
+    cursor: pointer;
+}
+
+#chat-button {
+    /*visibility: hidden; !* Hidden by default. Visible on click *!*/
+    min-width: 185px; /* Set a default minimum width */
+    text-align: center; /* Centered text */
+    padding: 16px; /* Padding */
+    position: relative; /* Sit on top of the screen */
+    /*!*z-index: 1; !* Add a z-index if needed *!*!*/
+    cursor: pointer;
+}
+
+/*#sync-button.show, #chat-button.show {*/
+/*visibility: visible;*/
+/*}*/
+
+#comment-button, #invite-button, #shareable-link-button {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+#toast-container > .toast-success {
+    background-image: none !important;
+    /*width: 300px !important;*/
+}
+
+#toast-container > .toast-error {
+    /*width: 300px !important;*/
+}

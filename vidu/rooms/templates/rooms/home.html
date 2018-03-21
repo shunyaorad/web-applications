@@ -1,0 +1,118 @@
+{% extends 'rooms/base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'rooms/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Grid row -->
+    <div class="row card-list">
+    {% csrf_token %}
+    {% for connection in connections %}
+        <!-- Grid column -->
+        {% if connection.visible is True %}
+            <div class="visible-room connection room-card col-lg-4 col-md-12">
+        {% else %}
+            <div class="invitation connection room-card col-lg-4 col-md-12">
+        {% endif %}
+    <!--Card-->
+    <div class="card" style="margin-top: 28px">
+        <!--Card image-->
+        <div class="view">
+
+            {% if connection.visible is True %}
+                <a href="{% url 'show_room' connection.room.pk %}">
+                    <img src="http://img.youtube.com/vi/{{ connection.room.video_id }}/0.jpg"
+                         class="img-fluid"
+                         alt="video-thumbnail">
+                </a>
+            {% else %}
+                <img src="http://img.youtube.com/vi/{{ connection.room.video_id }}/0.jpg"
+                     class="img-fluid"
+                     alt="video-thumbnail">
+            {% endif %}
+
+        </div>
+        <!--/.Card image-->
+        <!--Card content-->
+        <div class="card-body">
+            <h5 class="pink-text">
+                <i class="fas fa-user-circle"></i> {{ connection.room.owner.username }}
+            </h5>
+            {% if connection.visible is True %}
+                <a class="close invitation-response" name="{{ connection.room.pk }}">
+                    <i class="fa fa-times faa-shake animated-hover" data-toggle="modal"
+                       data-target="#delete{{ connection.room.pk }}"></i>
+                </a>
+                <!--Modal: modalConfirmDelete-->
+                <div class="modal fade" id="delete{{ connection.room.pk }}" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
+                        <div class="modal-content text-center">
+                            <div class="modal-header d-flex justify-content-center">
+                                <p class="heading">Are you sure to delete the room {{ connection.room.name }}?</p>
+                            </div>
+                            <div class="modal-body">
+                                <i class="fa fa-times fa-4x animated rotateIn"></i>
+                            </div>
+                            <div class="modal-footer flex-center">
+                                <a class="btn  btn-outline-danger" data-dismiss="modal"
+                                   name="{{ connection.room.pk }}"
+                                   onClick="deleteRoomPush(event)">
+                                    Yes
+                                </a>
+                                <a class="btn  btn-danger" data-dismiss="modal">
+                                    No
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <!--Title-->
+            <h4 class="card-title">
+                {% if connection.visible is True %}
+                    <a href="{% url 'show_room' connection.room.pk %}">
+                        {{ connection.room.name }}
+                    </a>
+                {% else %}
+                    {{ connection.room.name }}
+                {% endif %}
+            </h4>
+            <p>{{ connection.room.room_description }}</p>
+            {% if connection.visible is False %}
+                <input onClick='respond_invitation(event)'
+                       type='submit'
+                       class='btn btn-primary invitation-response mr-3'
+                       value='Accept'
+                       name="{{ connection.room.pk }}">
+                <input onClick='respond_invitation(event)'
+                       type='submit'
+                       class='btn btn-danger invitation-response mr-3'
+                       value='Reject'
+                       name="{{ connection.room.pk }}">
+            {% endif %}
+        </div>
+        <!--/.Card content-->
+    </div>
+    <!-- Grid column -->
+    </div>
+    {% endfor %}
+</div>
+    <!-- Grid row -->
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        var userPK = "{{ user.pk }}";
+        var url_to_show_room = "{% url 'show_room' 0%}";
+        var url_to_respond = "{% url 'respond' %}";
+        var url_to_get_connections = "{% url 'get_connections' %}";
+        var url_to_delete_room = "{% url 'delete_room'%}";
+        var csrf_token = "{{ csrf_token }}"
+    </script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script src="{% static 'rooms/js/home.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+[SOCIAL_AUTH]
+GITHUB_KEY :
+GITHUB_SECRET :
+
+TWITTER_KEY :
+TWITTER_SECRET:
+
+FACEBOOK_KEY :
+FACEBOOK_SECRET :
+
+[PUSHER]
+app_id :
+key :
+secret :
+
+[Email]
+Host:
+Port:
+User:
+Password:
+

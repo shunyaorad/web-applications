@@ -1,0 +1,135 @@
+{% load static %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}VidU{% endblock %}</title>
+    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'rooms/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'rooms/css/font-awesome-animation.min.css' %}">
+    <link rel="stylesheet" href="{% static 'rooms/css/mdb.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    {#    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">#}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'rooms/css/base.css' %}">
+    {% block stylesheet %}
+    {% endblock %}
+</head>
+<body>
+<div id="wrapper">
+    {% block body %}
+        {% block sidebar %}
+        {% endblock %}
+        <nav class="mb-1 navbar fixed-top navbar-expand-lg navbar-dark primary-color">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">VidU</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
+                        aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainMenu">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link waves-effect waves-light" href="{% url 'home' %}">
+                                <div style="font-size:1em">
+                                    <i class="fas fa-home"></i> Home
+                                </div>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <form class="form-inline waves-light waves-light ml-auto" mdbRippleRadius>
+                        {% csrf_token %}
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search Rooms" aria-label="Search">
+                        <button class="btn btn-light-blue btn-sm my-0 waves-light" type="submit" mdbRippleRadius>
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                    <ul class="navbar-nav ml-auto nav-flex-icons">
+                        <li class="nav-item">
+                            <a id="new-room-toggle" data-toggle="modal" data-target="#new-room-modal"
+                               class="nav-link waves-effect waves-light">
+                                <i class="fas fa-plus-circle"></i> New Room
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                                <a class="dropdown-item" href="{% url 'settings' %}">My account</a>
+                                <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            {% block new-room-modal %}
+                <!--Modal: Room Info-->
+                <div class="modal fade" id="new-room-modal" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel" aria-hidden="true">
+                    <!--Modal: room info form-->
+                    <div class="modal-dialog cascading-modal" role="document">
+                        <!--Content-->
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header light-blue white-text">
+                                <h4 class="modal-title w-100"><i class="fas fa-plus-circle"></i> Create New Room</h4>
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body">
+                                <form method="post" id="create-new-room">
+                                    {% csrf_token %}
+                                    <!-- Material input name -->
+                                    <div class="md-form form-sm">
+                                        <i class="fas fa-id-card prefix" style="color:#47A8EE"></i>
+                                        {% render_field new_room_form.name class="form-control form-control-sm" type="text" %}
+                                        <label for="room-name">Room Name</label>
+                                    </div>
+                                    <!-- Material input email -->
+                                    <div class="md-form form-sm">
+                                        <i class="fab fa-youtube prefix" style="color:#47A8EE"></i>
+                                        {% render_field new_room_form.video_url class="form-control form-control-sm" type="text" %}
+                                        <label for="video-url">Video URL</label>
+                                    </div>
+                                    <!-- Material textarea message -->
+                                    <div class="md-form form-sm">
+                                        <i class="fas fa-sticky-note prefix" style="color:#47A8EE"></i>
+                                        {% render_field new_room_form.room_description class="form-control md-textarea" type="text" %}
+                                        <label for="room-description">Room Description</label>
+                                    </div>
+                                    <div class="text-center mt-4 mb-2">
+                                        <input type="submit" class="btn light-blue" value="Create">
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <!--/.Content-->
+                    </div>
+                </div>
+                <!--Modal: modalPush-->
+            {% endblock %}
+            {% block content %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>
+<script src="{% static 'rooms/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'rooms/js/popper.min.js' %}"></script>
+<script src="{% static 'rooms/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'rooms/js/mdb.min.js' %}"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+{% block javascript %}
+{% endblock %}
+</body>
+</html>

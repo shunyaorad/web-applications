@@ -1,0 +1,100 @@
+{% extends 'rooms/base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Rooms</li>
+{% endblock %}
+
+{% block content %}
+    <!-- Grid row -->
+    <div class="row card-list">
+    {% csrf_token %}
+    {% for connection in connections %}
+        <!-- Grid column -->
+        {% if connection.visible is True %}
+            <div class="visible-room connection room-card col-lg-4 col-md-12">
+        {% else %}
+            <div class="invitation connection room-card col-lg-4 col-md-12">
+        {% endif %}
+    <!--Card-->
+    <div class="card" style="margin-top: 28px">
+        <!--Card image-->
+        <div class="view">
+            <img src="http://img.youtube.com/vi/{{ connection.room.video_id }}/0.jpg"
+                 class="img-fluid"
+                 alt="video-thumbnail">
+            {% if connection.visible is True %}
+            <a href="{% url 'show_room' connection.room.pk %}">
+                <div class="mask rgba-white-slight"></div>
+            </a>
+            {% endif %}
+
+        </div>
+        <!--/.Card image-->
+
+        <!--Card content-->
+        <div class="card-body">
+            <h5 class="pink-text">
+                <i class="fas fa-user-circle"></i> {{ connection.room.owner.username }}
+            </h5>
+            <!--Title-->
+            <h4 class="card-title">
+                {% if connetion.visible is True %}
+                    <a href="{% url 'show_room' connection.room.pk %}">
+                        {{ connection.room.name }}
+                    </a>
+                {% else %}
+                    {{ connection.room.name }}
+                {% endif %}
+            </h4>
+            {% if connection.room.owner == user %}
+                <input onClick='deleteRoomPush(event)'
+                       type='submit'
+                       class='btn btn-danger invitation-response'
+                       value='Delete'
+                       name="{{ connection.room.pk }}">
+            {% else %}
+                {% if connection.visible is True %}
+                    <input onClick='deleteRoomPush(event)'
+                           type='submit'
+                           class='btn btn-danger invitation-response'
+                           value='Delete'
+                           name="{{ connection.room.pk }}">
+                {% else %}
+                    <input onClick='respond_invitation(event)'
+                           type='submit'
+                           class='btn btn-primary invitation-response mr-3'
+                           value='Accept'
+                           name="{{ connection.room.pk }}">
+                    <input onClick='respond_invitation(event)'
+                           type='submit'
+                           class='btn btn-danger invitation-response mr-3'
+                           value='Reject'
+                           name="{{ connection.room.pk }}">
+                {% endif %}
+            {% endif %}
+        </div>
+        <!--/.Card content-->
+    </div>
+    <!--/.Card-->
+
+    </div>
+        <!-- Grid column -->
+    {% endfor %}
+</div>
+    <!-- Grid row -->
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        var userPK = "{{ user.pk }}";
+        var url_to_show_room = "{% url 'show_room' 0%}";
+        var url_to_respond = "{% url 'respond' %}";
+        var url_to_get_connections = "{% url 'get_connections' %}";
+        var url_to_delete_room = "{% url 'delete_room'%}";
+        var csrf_token = "{{ csrf_token }}"
+    </script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script src="{% static 'rooms/js/home.js' %}" type="text/javascript"></script>
+{% endblock %}

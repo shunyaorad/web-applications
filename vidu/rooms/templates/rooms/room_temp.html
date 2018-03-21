@@ -1,0 +1,345 @@
+{% extends 'rooms/base.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {{ room.name }} - {{ block.super }}
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'rooms/css/room.css' %}">
+    <link rel="stylesheet" href="{% static 'rooms/css/chatroom.css' %}">
+{% endblock %}
+
+{% block sidebar %}
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper z-depth-1">
+        <!-- Visitor sidebar content -->
+        <div class="container p-0 " id="visitors-sidebar">
+            <!-- Visitor sidebar title -->
+            <h3 class="sidebar-title text-left">
+                <i class="fas fa-users"></i> Visitors
+            </h3>
+            <!-- Visitors list -->
+            <div class="sidebar-nav">
+                {% for visitor in visible_users %}
+                    <div class="sidebar-user-box" id="{{ visitor.pk }}">
+                        <img class="sidebar-user-photo" src="{% static 'rooms/img/user.jpeg' %}"/>
+                        <p class="sidebar-username">{{ visitor.username }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="visitors-buttons">
+                <a class='btn btn-indigo waves-effect waves-light' id="chat-button">
+                    <i class="fas fa-comments"></i> Chat
+                </a>
+                <a class='btn btn-indigo waves-effect waves-light' id="sync-button" onclick='syncTo()'>
+                    <i class="fas fa-sync-alt"></i> Sync
+                </a>
+            </div>
+
+        </div>
+
+        <div class="container p-0" id="comments-sidebar">
+            <h3 class="sidebar-title">
+                <i class="fas fa-comment-alt"></i> Comments
+            </h3>
+            <!--Table-->
+            <table class="table">
+                <!--Table head-->
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Comment</th>
+                    <th>Username</th>
+                </tr>
+                </thead>
+                <!--Table head-->
+
+                <!--Table body-->
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>This is pretty cool</td>
+                    <td>Otto</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Yeah</td>
+                    <td>Thornton</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>Haha</td>
+                    <td>Sanders</td>
+                </tr>
+                </tbody>
+                <!--Table body-->
+
+            </table>
+            <!--Table-->
+        </div>
+
+        <div class="container p-0" id="chatroom-sidebar">
+            <h3 class="sidebar-title">
+                <i class="fas fa-comments"></i> Chat Room
+            </h3>
+            <div class="row border-chat">
+                <div class="col-md-12 col-sm-12 col-xs-12 second-section">
+                    <div class="chat-section">
+                        <ul>
+                            <li>
+                                <div class="left-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.
+                                    </p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="right-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="left-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="right-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="left-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="right-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="left-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="right-chat">
+                                    <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+                                    <p>Lorem ipsum dolor sit ameeserunt.</p>
+                                    <span>2 min</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row border-chat">
+                <div class="col-md-12 col-sm-12 col-xs-12 third-section">
+                    <div class="text-bar">
+                        <input type="text" placeholder="Write messege"><a href="#"><i class="fa fa-arrow-right"
+                                                                                      aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /#sidebar-wrapper -->
+{% endblock %}
+{% block content %}
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row justify-content-md-center">
+                <div class="col-12 video-url mb-1 mt-1 room-header">
+                    <p class="room-title">
+                        {{ room.name }}
+                    </p>
+                    <a class="btn btn-indigo control-button" id="visitors-sidebar-toggle">
+                        <i class="fas fa-users"></i> Visitors
+                    </a>
+                    <a class="btn btn-indigo control-button" id="comments-sidebar-toggle">
+                        <i class="fas fa-comment-alt"></i> Comments
+                    </a>
+                    <a class="btn btn-indigo control-button" id="chatroom-sidebar-toggle">
+                        <i class="fas fa-comments"></i> Chat Room
+                    </a>
+                    <a class="btn btn-indigo control-button" id="menu-toggle"
+                       data-toggle="modal" data-target="#info-modal">
+                        <i class="fas fa-info-circle"></i> Room Info
+                    </a>
+                    <!--Modal: Room Info-->
+                    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <!--Modal: room info form-->
+                        <div class="modal-dialog cascading-modal" role="document">
+                            <!--Content-->
+                            <div class="modal-content">
+                                <!--Header-->
+                                <div class="modal-header primary-color white-text">
+                                    <h4 class="title"><i class="fas fa-info-circle"></i> Room Info</h4>
+                                    <button id="info-modal-close" type="button" class="close waves-effect waves-light"
+                                            data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <!--Body-->
+                                <div class="modal-body">
+                                    <form method="post" id="update_room">
+                                        {% csrf_token %}
+                                        <!-- Material input name -->
+                                        <div class="md-form form-sm">
+                                            <i class="fas fa-id-card prefix"></i>
+                                            {% render_field url_form.name class="form-control form-control-sm" type="text" id="room-name" %}
+                                            <label for="room-name">Room Name</label>
+                                        </div>
+                                        <!-- Material input email -->
+                                        <div class="md-form form-sm">
+                                            <i class="fab fa-youtube prefix"></i>
+                                            {% render_field url_form.video_url class="form-control form-control-sm" type="text" id="video-url" %}
+                                            <label for="video-url">Video URL</label>
+                                        </div>
+                                        <!-- Material textarea message -->
+                                        <div class="md-form form-sm">
+                                            <i class="fas fa-sticky-note prefix"></i>
+                                            {% render_field url_form.room_description class="form-control md-textarea" type="text" id="room-description" %}
+                                            <label for="room-description">Room Description</label>
+                                        </div>
+                                        <div class="md-form form-sm">
+                                            <i class="fa fa-user prefix" style="color:#4F86ED"></i>
+                                            <input type="text" id="materialFormRegisterNameEx" class="form-control"
+                                                   value="{{ room.owner.username }}" readonly>
+                                            <label for="materialFormRegisterNameEx">Room Owner</label>
+                                        </div>
+
+                                        <div class="text-center mt-4 mb-2">
+                                            <input type="submit" class="btn btn-primary" value="Update">
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                            <!--/.Content-->
+                        </div>
+                    </div>
+                    <!--Modal: modalPush-->
+                </div>
+                <div class="col-12" id="video-content">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <div id="player"></div>
+                    </div>
+                </div>
+                <div class="col-12 video-url mt-1">
+                    <form method="post" id="post_comment">
+                        {% csrf_token %}
+                        <div class="form-row align-items-center">
+                            {% for field in comment_form %}
+                                <div class="form-group col-10 my-1">
+                                    <div class="col pl-0">
+                                        {% if comment_form.is_bound %}
+                                            {% if field.errors %}
+                                                {% render_field field class="form-control is-invalid" %}
+                                                {% for error in field.errors %}
+                                                    <div class="invalid-feedback">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% render_field field class="form-control is-valid" %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% render_field field class="form-control" %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="col-auto my-1">
+                                <button class="btn btn-primary" id="comment-button" type="submit">
+                                    <i class="fas fa-comment"></i> Comment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form method="post" id="invitation_form">
+                        {% csrf_token %}
+                        <div class="form-row align-items-center">
+                            {% for field in invitation_form %}
+                                <div class="form-group col-10 my-1">
+                                    <div class="col pl-0">
+                                        {% if invitation_form.is_bound %}
+                                            {% if field.errors %}
+                                                {% render_field field class="form-control is-invalid" %}
+                                                {% for error in field.errors %}
+                                                    <div class="invalid-feedback">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% render_field field class="form-control is-valid" %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% render_field field class="form-control" %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="col-auto my-1">
+                                <button class="btn btn-primary" id="invite-button" type="submit">
+                                    <i class="fas fa-user-plus"></i> Invite
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-10 my-1" style="padding-right:15px">
+                            <input id="shareable-link" type="text" class="form-control" value="{{ shareable_link }}"
+                                   readonly>
+                        </div>
+                        <div class="col-auto my-1">
+                            <button class="btn btn-primary" id="shareable-link-button" type="button"><i
+                                    class="fas fa-link"></i> Share Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        var videoURL = "{{ room.video_url }}";
+        var roomPK = "{{ room.pk }}";
+        var userPK = "{{ user.pk }}";
+        var url_to_update_room = "{% url 'update_room' %}";
+        var url_to_post_comment = "{% url 'post_comment' %}";
+        var url_to_get_comment = "{% url 'get_comment' %}";
+        var url_to_invite = "{% url 'invite' %}";
+        var url_to_send_player_state = "{% url 'send_player_state' %}";
+        var url_to_request_playback_time = "{% url 'request_playback_time' %}";
+        var url_to_send_playback_time = "{% url 'send_playback_time' %}";
+        var url_to_send_sync_invitation = "{% url 'send_sync_invitation' %}";
+        var url_to_push_feed = "{% url 'push_feed' %}";
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script src="{% static 'rooms/js/room.js' %}" type="text/javascript"></script>
+{% endblock %}

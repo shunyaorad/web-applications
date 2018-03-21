@@ -1,0 +1,22 @@
+body {
+    background: #FAFAFA;
+    /*font-family: 'Roboto', sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+a.nav-link.waves-effect.waves-light, a#userMenu {
+    margin-left: 20px;
+    /*margin-right: 20px;*/
+}
+
+i {
+    padding-right: 5px;
+}
+
+/*set the style of the logo*/
+.navbar-brand {
+    font-family: 'Satisfy', cursive;
+}
+

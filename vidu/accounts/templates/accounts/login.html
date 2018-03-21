@@ -1,0 +1,66 @@
+{% extends 'rooms/base.html' %}
+
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'rooms/css/coverpage.css' %}">
+    <link rel="stylesheet" href="{% static 'rooms/css/bootstrap.min.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Rammetto+One" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container form-block">
+        {% block login-register-title %}
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <a href="{% url 'signup' %}"><span>Register</span></a>
+                    <span>/</span>
+                    <a href="{% url 'home' %}"><span><strong>Login</strong></span></a>
+                </div>
+            </div>
+        {% endblock %}
+        <br>
+        <!--show the login form, with the 3rd party icons to login-->
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-8">
+
+                {% block login-register-form %}
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                {% include 'rooms/includes/form.html' %}
+                                <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                            </form>
+                            <div class="social-login text-center">
+                                <br><br>
+                                <p>Or login with:</p> <br>
+                                <div class="social-login-buttons">
+                                    <a href="{% url 'social:begin' 'github' %}"><i class="fab fa-github"
+                                                                                   style="font-size: 50px"></i></a>
+                                    <a href="{% url 'social:begin' 'twitter' %}"><i class="fab fa-twitter"
+                                                                                    style="font-size: 50px"></i></a>
+                                    <a href="{% url 'social:begin' 'facebook' %}"><i
+                                            class="fab fa-facebook-square"
+                                            style="font-size: 50px"></i></a>
+                                </div>
+                            </div>
+                            <div class="text-center py-2">
+                                <small>
+                                    <br><a href="{% url 'password_reset' %}" class="text-muted">Forgot your
+                                    password?</a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+            <div class="col-lg-offset-6 col-md-offset-6 col-sm-offset-0" id="title">
+                <h1>Share Video With U</h1>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

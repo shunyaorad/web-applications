@@ -1,0 +1,116 @@
+{% extends 'rooms/base.html' %}
+{% load widget_tweaks %}
+
+{% load static %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'rooms/css/coverpage.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="container form-block">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-sm-8">
+                <div class="card">
+                    <h3 class="card-header">Account Setting</h3>
+                    <div class="card-body">
+                        <form method="post" id="profile-update-form">
+                            {% csrf_token %}
+                            <div class="form-row align-items-center">
+                                {% for field in update_form.visible_fields %}
+                                    <div class="form-group col-10 my-1">
+                                        <div class="col pl-0">
+                                            {% if form.is_bound %}
+                                                {% if field.errors %}
+                                                    {% render_field field class="form-control is-invalid" %}
+                                                    {% for error in field.errors %}
+                                                        <div class="invalid-feedback">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {% render_field field class="form-control is-valid" %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% render_field field class="form-control" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class="col-auto my-1">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
+                            </div>
+                        </form>
+                        <i class="fab fa-github" style="font-size: 30px; color: dodgerblue"></i>
+                        {% if github_login %}
+                            <p>Connected as
+                                <a href="https://github.com/{{ github_login.extra_data.login }}"
+                                   target="_blank">{{ github_login.extra_data.login }}</a></p>
+                            {% if can_disconnect %}
+                                <form method="post" action="{% url 'social:disconnect' 'github' %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Disconnect from GitHub</button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled>Disconnect from GitHub</button>
+                                <p style="color: red">You must <a href="{% url 'password' %}">define a password</a> for
+                                    your account before disconnecting from Github.</p>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'social:begin' 'github' %}">Connect to GitHub</a>
+                        {% endif %}
+                        <br>
+                        <i class="fab fa-twitter" style="font-size: 30px;color: dodgerblue"></i>
+                        {% if twitter_login %}
+                            <p>Connected as <a
+                                    href="https://twitter.com/{{ twitter_login.extra_data.access_token.screen_name }}/"
+                                    target="_blank">@{{ twitter_login.extra_data.access_token.screen_name }}</a></p>
+                            {% if can_disconnect %}
+                                <form method="post" action="{% url 'social:disconnect' 'twitter' %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Disconnect from Twitter</button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled>Disconnect from Twitter</button>
+                                <p style="color: red">You must <a href="{% url 'password' %}">define a password</a> for
+                                    your account before disconnecting from Twitter.</p>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'social:begin' 'twitter' %}">Connect to Twitter</a>
+                        {% endif %}
+                        <br>
+                        <i class="fab fa-facebook-square" style="font-size: 30px;color: dodgerblue"></i>
+                        {% if facebook_login %}
+                            <p>Connected as <a href="https://facebook.com/{{ facebook_login.extra_data.id }}"
+                                               target="_blank">{{ facebook_login.extra_data.id }}</a></p>
+                            {% if can_disconnect %}
+                                <form method="post" action="{% url 'social:disconnect' 'facebook' %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-primary" type="submit">Disconnect from Facebook</button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled>Disconnect from Facebook</button>
+                                <p style="color: red">You must <a href="{% url 'password' %}">define a password</a> for
+                                    your account before disconnecting from Facebook.</p>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'social:begin' 'facebook' %}">Connect to Facebook</a>
+                        {% endif %}
+                    </div>
+                    <div class="text-center py-2">
+                        <small>
+                            <p>Or back to <a href="{% url 'home' %}">Home</a></p>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        var url_to_update_username = "{% url 'update_username' %}";
+    </script>
+    <script src="{% static 'accounts/js/settings.js' %}" type="text/javascript"></script>
+{% endblock %}

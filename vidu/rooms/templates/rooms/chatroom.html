@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="custom.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="main-section">
+	<div class="row border-chat">
+		<div class="col-md-12 col-sm-12 col-xs-12 first-section">
+			<div class="row">
+				<div class="col-md-8 col-sm-6 col-xs-6 left-first-section">
+					<p>Chat</p>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-6 right-first-section">
+					<a href="#"><i class="fa fa-minus" aria-hidden="true"></i></a>
+					<a href="#"><i class="fa fa-clone" aria-hidden="true"></i></a>
+					<a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row border-chat">
+		<div class="col-md-12 col-sm-12 col-xs-12 second-section">
+			<div class="chat-section">
+				<ul>
+					<li>
+						<div class="left-chat">
+							<img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.
+							</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="right-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="left-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="right-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="left-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="right-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="left-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+					<li>
+						<div class="right-chat">
+                            <img src="{% static 'rooms/img/1499345471_boy.png' %}">
+							<p>Lorem ipsum dolor sit ameeserunt.</p>
+							<span>2 min</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="row border-chat">
+		<div class="col-md-12 col-sm-12 col-xs-12 third-section">
+			<div class="text-bar">
+				<input type="text" placeholder="Write messege"><a href="#"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+    	$(".left-first-section").click(function(){
+            $('.main-section').toggleClass("open-more");
+        });
+    });
+    $(document).ready(function(){
+    	$(".fa-minus").click(function(){
+            $('.main-section').toggleClass("open-more");
+        });
+    });
+</script>
+</body>
+</html>
