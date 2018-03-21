@@ -10,6 +10,7 @@ $(function () {
 });
 
 function initialize() {
+    // Reload the page if the user used back button
     if (performance.navigation.type == 2) {
         location.reload(true);
     }
@@ -75,14 +76,15 @@ function makeRoomChannelName(roomPK) {
 function showRoom(room) {
     var roomURL = url_to_show_room.replace(/0/, room['room_pk']);  // make url to the room
     var visibleRoomTable = $(".card-list");
-    var newInvitationHTML = '<div class="invitation connection room-card col-lg-4 col-md-12">' +
+    var newRoomHTML =
+        '<div class="visible-room connection room-card col-lg-4 col-md-12">' +
         '<div class="card" style="margin-top: 28px">' +
         '<div class="view">' +
-        '<img src="http://img.youtube.com/vi/' + room['video_id'] + '/0.jpg"' + ' class="img-fluid">' +
+        '<img src="http://img.youtube.com/vi/' + room['video_id'] + '/mqdefault.jpg"' + ' class="img-fluid">' +
         '<a href="' + roomURL + '">' + '<div class="mask rgba-white-slight"></div></a>' +
         '</div>' +
         '<div class="card-body">' + '<h5 class="pink-text"><i class="fas fa-user-circle"></i> ' + room['owner'] + '</h5>' +
-        '<a class="close invitation-response" name="' + room['room_pk'] + '">' +
+        '<a class="close" name="' + room['room_pk'] + '">' +
         '<i class="fa fa-times faa-shake animated-hover" data-toggle="modal" data-target="#modalConfirmDelete"></i>' +
         '</a>' +
         '<div class="modal fade" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
@@ -94,18 +96,42 @@ function showRoom(room) {
         '<div class="modal-body">' +
         '<i class="fa fa-times fa-4x animated rotateIn"></i>' +
         '</div>' +
-        '<div class="modal-footer flex-center">' +
-        '<a class="btn  btn-outline-danger" data-dismiss="modal" name="{{ connection.room.pk }}" onClick="deleteRoomPush(event)"> Yes </a>' +
-        '<a class="btn  btn-danger waves-effect" data-dismiss="modal"> No </a>' +
-        '</div></div></div></div>' +
+        '</div></div></div>' +
         '<h4 class="card-title">' + '<a href="' + roomURL + '">' + room['name'] + '</a></h4>' +
         '<p>' + room['description'] + '</p>' +
         '</div></div></div>';
 
+    var confirmDeleteModal =
+        '<div class="modal fade" id="' + room['room_pk'] + '" tabindex="-1" role="dialog" ' +
+        'aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+        '<div class="modal-dialog modal-sm modal-notify modal-danger" role="document">' +
+        '<div class="modal-content text-center">' +
+        '<div class="modal-header d-flex justify-content-center">' +
+        '<p class="heading">Are you sure to delete the room ' + room['name'] + '?</p>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        '<i class="fa fa-times fa-4x animated rotateIn"></i>' +
+        '</div>' +
+        '<div class="modal-footer flex-center">' +
+        '<a class="btn  btn-outline-danger" data-dismiss="modal" ' +
+        'name="' + room['room_pk'] + '" ' +
+        'onClick="deleteRoomPush(event)">' +
+        'Yes' +
+        '</a>' +
+        '<a class="btn  btn-danger" data-dismiss="modal">' +
+        'No' +
+        '</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    newRoomHTML += confirmDeleteModal;
+
     if (invitationExists()) {
-        $(newInvitationHTML).insertBefore($(".invitation").first());
+        $(newRoomHTML).insertBefore($(".invitation").first());
     } else {
-        visibleRoomTable.append(newInvitationHTML);
+        visibleRoomTable.append(newRoomHTML);
     }
 }
 
