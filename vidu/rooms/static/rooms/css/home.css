@@ -1,3 +1,17 @@
+.room-card {
+    margin-bottom: 0;
+    height: 500px;
+}
+
+.card-body {
+    height: 200px;
+    overflow: auto;
+}
+
+.card-body::-webkit-scrollbar {
+    display: none;
+}
+
 .view {
     position: relative;
 }
