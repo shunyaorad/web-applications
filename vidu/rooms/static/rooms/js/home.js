@@ -50,6 +50,7 @@ function notifyLoginStatus(channelName) {
 
 function setupUserChannel() {
     subscribeToUserChannel(userPK);
+    bindReplyStatusRequestEvent();
 }
 
 function subscribeToUserChannel(userPK) {
@@ -270,6 +271,39 @@ function respond(responseRoomPK, response, srcElement) {
             }
         }
     )
+}
+
+
+/************************************************************************
+ * Login status related functions
+ ************************************************************************/
+/**
+ * Bind to reply request by others for my status. Reply to the requester's userRoomChannel
+ */
+function bindReplyStatusRequestEvent() {
+    userChannel.bind('request-status', function (user) {
+        var requesterChannelName = user['requesterChannelName'];
+        // notify the requester my current status
+        notifyLoginStatus(requesterChannelName);
+    });
+}
+/**
+ * Ajax to notify specified channel with my current login status
+ */
+function notifyLoginStatus(channelName) {
+    $.ajax({
+            url: url_to_notify_status,
+            type: 'GET',
+            data: {
+                requesterChannelName: channelName,
+                status: myStatus
+            },
+            success: function (response) {
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        }
+    );
 }
 
 /************************************************************************

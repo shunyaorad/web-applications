@@ -11,6 +11,7 @@ var syncChannel; // sync channel for sync mode
 var userSyncChannel; // sync-1-23-channel-2 (syncChannel-userPK)
 var syncOwner = false; // true if this user starts sync channel
 var myOwnChange = true; // The change in the player state is this user's command
+var allVisitors = new Set(); // all visitors visible to the room
 var selectedVisitors = new Set(); // store all selected users on the visitors-sidebar
 var numOfSelectedNotReadyForSyncVisitor = 0;
 var pusher;
@@ -165,7 +166,7 @@ function setupButtonClickEvents() {
  */
 function isReadyForSync(sidebarUserBox) {
     var userStatus = $(sidebarUserBox).find(".sidebar-userstatus");
-    if (userStatus.hasClass("offline") || userStatus.hasClass("busy") || userStatus.hasClass("sync")) {
+    if (userStatus.hasClass("offline") || userStatus.hasClass("busy")) {
         return false;
     }
     return true;
@@ -793,14 +794,27 @@ function subscribeToRoomChannel(roomPK) {
     bindRoomModificationEvent(roomChannel);
     bindNewCommentPostedEvent(roomChannel);
     bindInvitationAcceptedEvent(roomChannel);
+    allVisitors = getAllVisitorsPK();
+    for (var i = 0; i < allVisitors.length; i++) {
+        var userChannel = subscribeToUserChannel(allVisitors[i]);
+        bindReplyStatusRequestEvent(userChannel);
+    }
     bindReceiveCurrentStatusEvent(roomChannel);
+}
+
+// TODO: iterate all users in the visitors sidebar and subscribe to receive current status event
+/**
+ * Get all visitors pk
+ */
+function getAllVisitorsPK() {
+
 }
 
 /**
  * Bind to reply request by others for my status. Reply to the requester's userRoomChannel
  */
-function bindReplyStatusRequestEvent() {
-    roomChannel.bind('request-status', function (user) {
+function bindReplyStatusRequestEvent(channelName) {
+    channelName.bind('request-status', function (user) {
         var requesterChannelName = user['requesterChannelName'];
         // notify the requester my current status
         notifyLoginStatus(requesterChannelName);
@@ -965,6 +979,21 @@ function sendReplySyncInvitation(requestSyncID, reply) {
 /**********************************************************************************
  * Utility ************************************************************************
  **********************************************************************************/
+
+function subscribeToUserChannel(userPK) {
+    userChannelName = makeUserChannelName(userPK);
+    userChannel = pusher.subscribe(channelName);
+    userChannel.bind('user_invited', function (invitation) {
+        console.log("received invitation message:");
+        console.log(invitation);
+        subscribeToRoomChannel(invitation['room_pk']);
+        showInvitation(invitation)
+    });
+}
+
+function makeUserChannelName(userPK) {
+    return channelName = "user-" + userPK + "-channel";
+}
 
 function copyToClipBoard() {
     var copyText = document.getElementById("shareable-link");
