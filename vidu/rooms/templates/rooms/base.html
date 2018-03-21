@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'rooms/css/font-awesome-animation.min.css' %}">
     <link rel="stylesheet" href="{% static 'rooms/css/mdb.min.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
     {#    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">#}
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'rooms/css/base.css' %}">
@@ -25,8 +26,10 @@
         {% block sidebar %}
         {% endblock %}
         <nav class="mb-1 navbar fixed-top navbar-expand-lg navbar-dark primary-color">
-            <div class="container">
-                <a class="navbar-brand" href="{% url 'home' %}">VidU</a>
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <i class="fas fa-video"></i> VidU
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
                         aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -44,7 +47,7 @@
                     </ul>
                     <form class="form-inline waves-light waves-light ml-auto" mdbRippleRadius>
                         {% csrf_token %}
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search Rooms" aria-label="Search">
+                        <input class="search-bar form-control mr-sm-2" type="text" placeholder="Search Rooms" aria-label="Search">
                         <button class="btn btn-light-blue btn-sm my-0 waves-light" type="submit" mdbRippleRadius>
                             <i class="fas fa-search"></i>
                         </button>

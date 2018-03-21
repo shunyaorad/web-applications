@@ -17,6 +17,9 @@ i {
 
 /*set the style of the logo*/
 .navbar-brand {
-    font-family: 'Satisfy', cursive;
+    font-family: 'Comfortaa', cursive;
 }
 
+input.search-bar.form-control.mr-sm-2 {
+    width: 500px;
+}
