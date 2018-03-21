@@ -1,19 +1,35 @@
 .room-card {
     margin-bottom: 0;
-    height: 500px;
+    height: 450px;
 }
 
 .card-body {
     height: 200px;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .card-body::-webkit-scrollbar {
     display: none;
 }
 
+.card-body:after {
+    content: ' ';
+    display: block;
+    background-color: white;
+    height: 30px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
 .view {
     position: relative;
+}
+
+img {
+    background: center no-repeat;
+    height: 204px;
+    width: 480px;
 }
 
 .accept {
