@@ -302,7 +302,7 @@ img {
 
 #sync-button {
     /*visibility: hidden; !* Hidden by default. Visible on click *!*/
-    min-width: 185px; /* Set a default minimum width */
+    min-width: 130px; /* Set a default minimum width */
     text-align: center; /* Centered text */
     padding: 16px; /* Padding */
     position: relative; /* Sit on top of the screen */
@@ -312,7 +312,7 @@ img {
 
 #chat-button {
     /*visibility: hidden; !* Hidden by default. Visible on click *!*/
-    min-width: 185px; /* Set a default minimum width */
+    width: 130px; /* Set a default minimum width */
     text-align: center; /* Centered text */
     padding: 16px; /* Padding */
     position: relative; /* Sit on top of the screen */

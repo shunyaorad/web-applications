@@ -69,6 +69,11 @@ function setupButtonClickEvents() {
         sidebarLogic("#chatroom-sidebar", ["#visitors-sidebar", "#comments-sidebar"])
     });
 
+    $("#chatroom-close").on("click", function (e) {
+        e.preventDefault();
+        sidebarLogic("#chatroom-sidebar", ["#visitors-sidebar", "#comments-sidebar"])
+    });
+
     /**
      * Open comments sidebar
      */
@@ -77,10 +82,20 @@ function setupButtonClickEvents() {
         sidebarLogic("#comments-sidebar", ["#chatroom-sidebar", "#visitors-sidebar"])
     });
 
+    $("#comments-close").on("click", function (e) {
+        e.preventDefault();
+        sidebarLogic("#comments-sidebar", ["#chatroom-sidebar", "#visitors-sidebar"])
+    });
+
     /**
      * Open visitors sidebar
      */
     $("#visitors-sidebar-toggle").click(function (e) {
+        e.preventDefault();
+        sidebarLogic("#visitors-sidebar", ["#chatroom-sidebar", "#comments-sidebar"])
+    });
+
+    $("#visitors-close").on("click", function (e) {
         e.preventDefault();
         sidebarLogic("#visitors-sidebar", ["#chatroom-sidebar", "#comments-sidebar"])
     });
@@ -110,6 +125,8 @@ function setupButtonClickEvents() {
             hideVisitorsButtons();
         }
     });
+
+
 
     /**
      * Update room asychronusly

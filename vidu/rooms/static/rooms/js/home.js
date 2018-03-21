@@ -156,7 +156,7 @@ function showInvitation(room) {
     var newInvitationHTML = '<div class="invitation connection room-card col-lg-4 col-md-12">' +
         '<div class="card" style="margin-top: 28px">' +
         '<div class="view">' +
-        '<img src="http://img.youtube.com/vi/' + room['video_id'] + '/0.jpg"' + ' class="img-fluid">' +
+        '<img src="http://img.youtube.com/vi/' + room['video_id'] + '/mqdefault.jpg"' + ' class="img-fluid">' +
         '</div>' +
         '<div class="card-body">' + '<h5 class="pink-text"><i class="fas fa-user-circle"></i> ' + room['owner'] + '</h5>' +
         '<h4 class="card-title">' + room['name'] + '</h4>' +

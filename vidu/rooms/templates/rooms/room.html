@@ -22,7 +22,7 @@
         <h3 class="sidebar-title text-left">
             <i class="fas fa-users"></i> Visitors
             <span>
-                <a class="sidebar-hide">
+                <a class="sidebar-hide" id="visitors-close">
                     <i class="fas fa-times"></i>
                 </a>
             </span>
@@ -58,7 +58,7 @@
         <h3 class="sidebar-title">
             <i class="fas fa-comment-alt"></i> Comments
             <span>
-                <a class="sidebar-hide">
+                <a class="sidebar-hide" id="comments-close">
                     <i class="fas fa-times"></i>
                 </a>
             </span>
@@ -107,7 +107,7 @@
         <h3 class="sidebar-title">
             <i class="fas fa-comments"></i> Chat Room
             <span>
-                <a class="sidebar-hide">
+                <a class="sidebar-hide" id="chatroom-close">
                     <i class="fas fa-times"></i>
                 </a>
             </span>
@@ -249,22 +249,19 @@
                                     <!-- Material input name -->
                                     <div class="md-form form-sm">
                                         <i class="fas fa-id-card prefix"></i>
-                                        {% render_field url_form.name class="form-control form-control-sm" type="text"
-                                        id="room-name" %}
+                                        {% render_field url_form.name class="form-control form-control-sm" type="text" id="room-name" %}
                                         <label for="room-name">Room Name</label>
                                     </div>
                                     <!-- Material input email -->
                                     <div class="md-form form-sm">
                                         <i class="fab fa-youtube prefix"></i>
-                                        {% render_field url_form.video_url class="form-control form-control-sm"
-                                        type="text" id="video-url" %}
+                                        {% render_field url_form.video_url class="form-control form-control-sm" type="text" id="video-url" %}
                                         <label for="video-url">Video URL</label>
                                     </div>
                                     <!-- Material textarea message -->
                                     <div class="md-form form-sm">
                                         <i class="fas fa-sticky-note prefix"></i>
-                                        {% render_field url_form.room_description class="form-control md-textarea"
-                                        type="text" id="room-description" %}
+                                        {% render_field url_form.room_description class="form-control md-textarea" type="text" id="room-description" %}
                                         <label for="room-description">Room Description</label>
                                     </div>
                                     <div class="md-form form-sm">
