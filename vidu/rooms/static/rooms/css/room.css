@@ -311,13 +311,13 @@ img {
     cursor: pointer;
 }
 
-/*#sync-button.show, #chat-button.show {*/
-/*visibility: visible;*/
-/*}*/
-
 #comment-button, #invite-button, #shareable-link-button {
     padding-right: 20px;
     padding-left: 20px;
+}
+
+.post-form {
+    height: 70px;
 }
 
 #toast-container > .toast-success {

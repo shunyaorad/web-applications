@@ -281,7 +281,7 @@
                     <!-- Post Comment form -->
                     <form method="post" id="post_comment">
                         {% csrf_token %}
-                        <div class="form-row align-items-center">
+                        <div class="post-form form-row align-items-center">
                             {% for field in comment_form %}
                                 <div class="form-group col-10 my-1">
                                     <div class="col pl-0">
@@ -313,7 +313,7 @@
                     <!-- Invite friend form -->
                     <form method="post" id="invitation_form">
                         {% csrf_token %}
-                        <div class="form-row align-items-center">
+                        <div class="post-form form-row align-items-center">
                             {% for field in invitation_form %}
                                 <div class="form-group col-10 my-1">
                                     <div class="col pl-0">
@@ -343,7 +343,7 @@
                     </form>
 
                     <!-- link share -->
-                    <div class="form-row align-items-center">
+                    <div class="post-form form-row align-items-center">
                         <div class="form-group col-10 my-1" style="padding-right:15px">
                             <input id="shareable-link" type="text" class="form-control" value="{{ shareable_link }}"
                                    readonly>
