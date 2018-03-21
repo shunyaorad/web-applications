@@ -81,8 +81,6 @@
 .second-section {
     padding: 0px;
     margin: 0px;
-    /*background-color: #F3F3F3;*/
-    background: #FAFAFA;
     height: 100%;
 }
 
@@ -126,7 +124,8 @@
     width: 87%;
     margin-left: -15px;
     padding: 0 10px;
-    /*border: 1px solid #fff;*/
+    text-decoration: none !important;
+    outline: none;
 }
 
 .text-bar a i {

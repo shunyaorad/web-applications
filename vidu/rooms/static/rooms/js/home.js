@@ -2,6 +2,8 @@ window.onload = initialize();
 Pusher.logToConsole = false; // For debugging
 var pusher;
 var userChannel;
+var userChannelName;
+var myStatus = 'online';
 
 
 // Initialize tooltips
@@ -22,12 +24,36 @@ function initialize() {
     setupRoomChannel();
 }
 
+$(window).on('beforeunload', function (e) {
+    myStatus = 'offline';
+    notifyLoginStatus(userChannelName);
+});
+
+/**
+ * Ajax to notify specified channel with my current login status
+ */
+function notifyLoginStatus(channelName) {
+    $.ajax({
+            url: url_to_notify_status,
+            type: 'GET',
+            data: {
+                requesterChannelName: channelName,
+                status: myStatus
+            },
+            success: function (response) {
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        }
+    );
+}
+
 function setupUserChannel() {
     subscribeToUserChannel(userPK);
 }
 
 function subscribeToUserChannel(userPK) {
-    var channelName = makeUserChannelName(userPK);
+    userChannelName = makeUserChannelName(userPK);
     userChannel = pusher.subscribe(channelName);
     userChannel.bind('user_invited', function (invitation) {
         console.log("received invitation message:");
@@ -246,6 +272,37 @@ function respond(responseRoomPK, response, srcElement) {
     )
 }
 
+/************************************************************************
+ * Sync related functions
+ ************************************************************************/
+
+/**
+ * Bind to request for sync event.
+ */
+function bindSyncInvitationEvent() {
+    userChannel.bind('sync-invited', function (invitation) {
+        var requestSyncID = invitation['syncID'];
+        var inviter = invitation['username'];
+        setToastr("toast-bottom-right", false, "0");
+        toastr.success(
+            inviter + ' wants to sync with you.' +
+            '<a class="btn btn-success" style="padding-right: 20px; padding-left: 20px;" onclick="replySyncInvitation(\'' + "accept\'," + '\'' + requestSyncID + '\')">Accept</a>' +
+            '<a class="btn btn-danger" style="padding-right: 20px; padding-left: 20px;" onclick="replySyncInvitation(\'' + "reject\'," + '\'' + requestSyncID + '\')">Reject</a> '
+        );
+    });
+}
+
+/**
+ * Reply to sync invitation
+ */
+function replySyncInvitation(reply, requestSyncID) {
+    if (reply == "accept") {
+        syncID = requestSyncID;
+        subscribeToSyncChannel(syncID);
+    }
+    toastr.clear(); //TODO: this will clear all toastrs. Clear only the current one.
+    sendReplySyncInvitation(requestSyncID, reply);
+}
 
 /**
  * Get csrf token

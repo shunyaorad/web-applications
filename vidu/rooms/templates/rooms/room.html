@@ -13,7 +13,7 @@
 
 {% block sidebar %}
 <!-- Sidebar -->
-<div class="sidebar-wrapper z-depth-0">
+<div class="sidebar-wrapper z-depth-1">
 
     <!-- Visitor sidebar content -->
     <div class="sidebar-content container p-0 " id="visitors-sidebar">
@@ -31,11 +31,11 @@
         <!-- Visitors list -->
         <div class="sidebar-nav">
             {% for visitor in visible_users %}
-            <div class="sidebar-user-box" id="{{ visitor.pk }}">
-                <img class="sidebar-user-photo" src="{% static 'rooms/img/user.jpeg' %}"/>
-                <p class="sidebar-username">{{ visitor.username }}</p>
-                <p class="sidebar-userstatus offline">offline</p>
-            </div>
+                <div class="sidebar-user-box" id="{{ visitor.pk }}">
+                    <img class="sidebar-user-photo" src="{% static 'rooms/img/user.jpeg' %}"/>
+                    <p class="sidebar-username">{{ visitor.username }}</p>
+                    <p class="sidebar-userstatus offline">offline</p>
+                </div>
             {% endfor %}
         </div>
 
