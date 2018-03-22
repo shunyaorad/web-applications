@@ -54,10 +54,11 @@ def home(request):
 ########################################################################
 
 @login_required
-def show_room(request, pk):
+def show_room(request, pk, sync_id=""):
 	"""
 	Show room with specified pk
 	:param pk: room's primary key
+	:param sync_channel_name: sync channel name for sync purpose
 	"""
 	room = get_object_or_404(Room, pk=pk)
 	user = request.user
@@ -88,7 +89,8 @@ def show_room(request, pk):
 			'invitation_form': invitation_form,
 			'new_room_form': new_room_form,
 			'shareable_link': shareable_link,
-			'visible_users': visible_users
+			'visible_users': visible_users,
+			'sync_id': sync_id
 		})
 
 

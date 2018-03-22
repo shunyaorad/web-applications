@@ -41,7 +41,7 @@ function setupUserChannel() {
 
 function subscribeToUserChannel(userPK) {
     userChannelName = makeUserChannelName(userPK);
-    userChannel = pusher.subscribe(channelName);
+    userChannel = pusher.subscribe(userChannelName);
     userChannel.bind('user_invited', function (invitation) {
         console.log("received invitation message:");
         console.log(invitation);
@@ -51,7 +51,7 @@ function subscribeToUserChannel(userPK) {
 }
 
 function makeUserChannelName(userPK) {
-    return channelName = "user-" + userPK + "-channel";
+    return "user-" + userPK + "-channel";
 }
 
 function setupRoomChannel() {
@@ -317,24 +317,43 @@ function bindSyncInvitationEvent() {
  * Reply to sync invitation
  */
 function replySyncInvitation(reply, requestSyncID) {
-    if (reply == "accept") {
-        syncID = requestSyncID;
-        subscribeToSyncChannel(syncID);
-    }
     toastr.clear(); //TODO: this will clear all toastrs. Clear only the current one.
     sendReplySyncInvitation(requestSyncID, reply);
 }
 
+function jumpToRoomWithSyncMode(syncID) {
+    var jumpRoomPK = syncID.split("-")[1];
+    var roomURL = url_to_show_room.replace(/0/, jumpRoomPK) + syncID;
+    console.log("Jumping to " + roomURL);
+    document.location.href = roomURL;
+}
+
 /**
- * Reply to sync invitation
+ * Send reply to sync invitation to the sync channel
  */
-function replySyncInvitation(reply, requestSyncID) {
-    if (reply == "accept") {
-        syncID = requestSyncID;
-        subscribeToSyncChannel(syncID);
-    }
-    toastr.clear(); //TODO: this will clear all toastrs. Clear only the current one.
-    sendReplySyncInvitation(requestSyncID, reply);
+function sendReplySyncInvitation(requestSyncID, reply) {
+    var syncChannelName = makeSyncChannelName(requestSyncID);
+    $.ajax({
+            url: url_to_notify_sync_channel,
+            type: 'GET',
+            data: {
+                syncChannelName: syncChannelName,
+                eventName: 'reply_sync_invitation',
+                message: reply
+            },
+            success: function (response) {
+                if (reply == 'accept') {
+                    jumpToRoomWithSyncMode(requestSyncID);
+                }
+            },
+            error: function (xhr, errmsg, err) {
+            }
+        }
+    )
+}
+
+function makeSyncChannelName(syncID) {
+    return "sync-" + syncID + "-channel";
 }
 
 /**

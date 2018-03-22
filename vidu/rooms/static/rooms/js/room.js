@@ -38,6 +38,7 @@ function repeatedFunc() {
  * Initialize
  */
 $(document).ready(function () {
+    videoID = youtube_parser(videoURL);
     console.log("initializing");
     getNewComments();
     Pusher.logToConsole = true; // For debugging
@@ -49,8 +50,12 @@ $(document).ready(function () {
     subscribeToAllVisitorsUserChannels(); // responsible for receiving other visitors current status
     subscribeToRoomChannel(roomPK); // responsible for change in room status
     subscribeToUserRoomChannel(userPK, roomPK); // responsible for sync
-    videoID = youtube_parser(videoURL);
     setupButtonClickEvents();
+    if (syncID != "") {
+        console.log("User enter with sync mode on");
+        syncMode = true;
+        myStatus = "sync";
+    }
 });
 
 $(window).on('beforeunload', function (e) {
@@ -478,9 +483,10 @@ function startSync() {
         syncID = userPK + "-" + roomPK;
         subscribeToSyncChannel(syncID);
         sendSyncInvitation(syncID, selectedVisitors);
+        deselectAllUsers();
+        hideVisitorsButtons();
         setToastr("toast-bottom-right", true, "3000");
         toastr.success('Sent sync invitations!');
-        deselectAllUsers();
     }
 }
 
@@ -499,7 +505,7 @@ function subscribeToSyncChannel(syncID) {
     myStatus = "sync";
     syncChannelName = makeSyncChannelName(syncID);
     syncChannel = pusher.subscribe(syncChannelName);
-    var ownerPK = syncChannelName.split("-")[1]; // sync-roomPK-ownerPK-channel
+    var ownerPK = syncChannelName.split("-")[1]; // sync-ownerPK-roomPK-channel
     // if this user is the owner of the sync channel, responsible for initial state of other sync users
     if (ownerPK == userPK) {
         syncOwner = true;
@@ -1106,6 +1112,9 @@ window.onYouTubeIframeAPIReady = function () {
  */
 function onPlayerReady(event) {
     window.setInterval(repeatedFunc, 500);
+    if (syncMode) {
+        subscribeToSyncChannel(syncID);
+    }
 }
 
 /**

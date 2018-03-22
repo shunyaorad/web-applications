@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.home, name='home'),
 	url(r'^rooms/(?P<pk>\d+)/$', views.show_room, name='show_room'),
+	url(r'^rooms/(?P<pk>\d+)/(?P<sync_id>[A-Za-z0-9_=-]+)/$', views.show_room, name='show_room'),
 	url(r'^rooms/(?P<signed_pk>[0-9]+/[A-Za-z0-9_=-]+)/$', views.show_shared_room, name='shared-room'),
 	url(r'^new_room/$', views.new_room, name='new_room'),
 	url(r'^update_room/$', views.update_room, name='update_room'),
