@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'rooms/css/mdb.min.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
-    {#    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">#}
+{#    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">#}
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'rooms/css/base.css' %}">
     {% block stylesheet %}
@@ -47,7 +47,8 @@
                     </ul>
                     <form class="form-inline waves-light waves-light" mdbRippleRadius>
                         {% csrf_token %}
-                        <input class="search-bar form-control mr-sm-2" type="text" placeholder="Search Rooms" aria-label="Search">
+                        <input class="search-bar form-control mr-sm-2" type="text" placeholder="Search Rooms"
+                               aria-label="Search">
                         <button class="btn btn-light-blue btn-sm my-0 waves-light" type="submit" mdbRippleRadius>
                             <i class="fas fa-search"></i>
                         </button>
