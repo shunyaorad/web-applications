@@ -8,6 +8,9 @@ from django.urls import reverse
 
 
 class Profile(models.Model):
+	"""
+	User profile
+	"""
 	profile_photo = models.FileField(upload_to="images", null=True, blank=True)
 	content_type = models.CharField(max_length=50, null=True, blank=True)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -20,6 +23,9 @@ class Profile(models.Model):
 
 
 class Room(models.Model):
+	"""
+	Room that holds youtube video
+	"""
 	name = models.CharField(max_length=30)
 	video_url = models.CharField(max_length=100)
 	room_description = models.CharField(max_length=1000, null=True, blank=True)
@@ -39,6 +45,9 @@ class Room(models.Model):
 
 
 class Comment(models.Model):
+	"""
+	Comment in a room
+	"""
 	message = models.TextField(max_length=500)
 	room = models.ForeignKey(Room, related_name='comments', on_delete=models.CASCADE)
 	created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
@@ -51,6 +60,9 @@ class Comment(models.Model):
 
 
 class Connection(models.Model):
+	"""
+	Connection betweeen a user and a room
+	"""
 	created_at = models.DateTimeField(auto_now_add=True)
 	room = models.ForeignKey(Room, related_name='connections', on_delete=models.CASCADE)
 	user = models.ForeignKey(User, related_name='connections', on_delete=models.CASCADE)
@@ -63,3 +75,31 @@ class Connection(models.Model):
 
 	class Meta:
 		unique_together = ['room', 'user']
+
+
+class Chat(models.Model):
+	"""
+	Chat messages. Can be either private chat message or public message in a room
+	"""
+	"""
+		Comment in a room
+		"""
+	message = models.TextField(max_length=500)
+	created_by = models.ForeignKey(User, related_name='chat_sent', on_delete=models.CASCADE)
+	directed_to = models.ForeignKey(User, related_name='chat_received', on_delete=models.CASCADE, null=True, blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	room = models.ForeignKey(User, related_name='chats', on_delete=models.CASCADE, null=True, blank=True)
+	time_stamp = models.IntegerField()
+
+	def __str__(self):
+		truncated_message = Truncator(self.message)
+		return truncated_message.chars(30) + " TS: " + str(self.time_stamp)
+
+
+class Notification(models.Model):
+	"""
+	Notification to a user
+	"""
+	message = models.TextField(max_length=500, null=True, blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
