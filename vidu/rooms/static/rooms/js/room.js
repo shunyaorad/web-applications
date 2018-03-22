@@ -13,6 +13,7 @@ var syncOwner = false; // true if this user starts sync channel
 var myOwnChange = true; // The change in the player state is this user's command
 var allVisitors = new Set(); // all visitors visible to the room
 var selectedVisitors = new Set(); // store all selected users on the visitors-sidebar
+var selectedNonSyncableVisitors = new Set(); // store all selected users on the visitors-sidebar
 var numOfSelectedNotReadyForSyncVisitor = 0;
 var pusher;
 var userChannel; // user channel of this user
@@ -41,7 +42,7 @@ $(document).ready(function () {
     videoID = youtube_parser(videoURL);
     console.log("initializing");
     getNewComments();
-    Pusher.logToConsole = true; // For debugging
+    Pusher.logToConsole = false; // For debugging
     pusher = new Pusher('c45513cf0c7e246ab1e6', {
         encrypted: true
     });
@@ -120,15 +121,18 @@ function setupButtonClickEvents() {
         if (selectedVisitors.has(selectedUserPK)) {
             selectedVisitors.delete(selectedUserPK);
             if (!isReadyForSync(this)) {
-                numOfSelectedNotReadyForSyncVisitor -= 1;
+                selectedNonSyncableVisitors.delete(selectedUserPK);
             }
         } else {
-            selectedVisitors.add($(this).attr('id'));
-            if (!isReadyForSync(this)) {
-                numOfSelectedNotReadyForSyncVisitor += 1;
+            selectedVisitors.add(selectedUserPK);
+            if (isReadyForSync(this)) {
+                selectedNonSyncableVisitors.delete(selectedUserPK);
+            } else {
+                selectedNonSyncableVisitors.add(selectedUserPK);
             }
         }
         if (selectedVisitors.size > 0) {
+            console.log("show buttons");
             showVisitorsButtons();
         }
         else if (selectedVisitors.size == 0) {
@@ -248,7 +252,7 @@ function deselectAllUsers() {
  */
 function showVisitorsButtons() {
     removeButtonColor("#sync-button");
-    if (numOfSelectedNotReadyForSyncVisitor > 0) {
+    if (selectedNonSyncableVisitors.size > 0) {
         addButtonColor("#sync-button", "btn-danger");
     } else {
         addButtonColor("#sync-button", "btn-dark-green");

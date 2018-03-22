@@ -18,7 +18,7 @@ function initialize() {
     }
     console.log("initializing");
 
-    Pusher.logToConsole = true; // For debugging
+    Pusher.logToConsole = false; // For debugging
     pusher = new Pusher('c45513cf0c7e246ab1e6', {
         encrypted: true
     });
