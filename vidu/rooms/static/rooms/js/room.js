@@ -15,6 +15,8 @@ var allVisitors = new Set(); // all visitors visible to the room
 var selectedVisitors = new Set(); // store all selected users on the visitors-sidebar
 var numOfSelectedNotReadyForSyncVisitor = 0;
 var pusher;
+var userChannel; // user channel of this user
+var userChannelName;
 var roomChannel; // room channel for this room
 var roomChannelName;
 var userRoomChannel; // unique user-room channel for this user and room
@@ -38,23 +40,25 @@ function repeatedFunc() {
 $(document).ready(function () {
     console.log("initializing");
     getNewComments();
-    Pusher.logToConsole = false; // For debugging
+    Pusher.logToConsole = true; // For debugging
     pusher = new Pusher('c45513cf0c7e246ab1e6', {
         encrypted: true
     });
     myStatus = 'online';
-    subscribeToRoomChannel(roomPK);
-    subscribeToUserRoomChannel(userPK, roomPK);
+    subscribeToUserChannel(); // responsible for reporting current status
+    subscribeToAllVisitorsUserChannels(); // responsible for receiving other visitors current status
+    subscribeToRoomChannel(roomPK); // responsible for change in room status
+    subscribeToUserRoomChannel(userPK, roomPK); // responsible for sync
     videoID = youtube_parser(videoURL);
     setupButtonClickEvents();
 });
 
 $(window).on('beforeunload', function (e) {
-    myStatus = 'offline';
-    notifyLoginStatus(roomChannelName);
     if (syncMode) {
         notifySyncStop();
     }
+    myStatus = 'offline';
+    notifyLoginStatus(userChannelName);
 });
 
 
@@ -128,7 +132,6 @@ function setupButtonClickEvents() {
     });
 
 
-
     /**
      * Update room asychronusly
      */
@@ -166,7 +169,7 @@ function setupButtonClickEvents() {
  */
 function isReadyForSync(sidebarUserBox) {
     var userStatus = $(sidebarUserBox).find(".sidebar-userstatus");
-    if (userStatus.hasClass("offline") || userStatus.hasClass("busy")) {
+    if (userStatus.hasClass("offline") || userStatus.hasClass("busy") || userStatus.hasClass("sync")) {
         return false;
     }
     return true;
@@ -512,7 +515,7 @@ function subscribeToSyncChannel(syncID) {
     bindReplySyncInvitationEvent();
     bindStopSyncEvent();
     bindPlaybackChangeEvent();
-    notifyLoginStatus(roomChannelName);
+    notifyLoginStatus(userChannelName);
     bindSyncDeleteEvent();
     showInSyncButton()
 }
@@ -714,7 +717,7 @@ function stopSync(trigger) {
     toastr.success('Stopped sync!');
 
     notifySyncStop();
-    notifyLoginStatus(roomChannelName);
+    notifyLoginStatus(userChannelName);
 }
 
 /**
@@ -772,6 +775,46 @@ function hideInSyncButton() {
     $("#in-sync-button").removeClass("show");
 }
 
+
+/************************************************************************
+ * User Channel ***************************************
+ ************************************************************************/
+
+/**
+ * Subscribe to user channel.
+ * Logged in user channel replies to status change request.
+ */
+function subscribeToUserChannel() {
+    userChannelName = makeUserChannelName(userPK);
+    userChannel = pusher.subscribe(userChannelName);
+    bindReplyStatusRequestEvent(userChannel);
+    notifyLoginStatus(userChannelName);
+}
+
+
+/**
+ * Subscribe to visitors user channel
+ */
+function subscribeToAllVisitorsUserChannels() {
+    allVisitors = getAllVisitorsPK();
+    allVisitors.forEach(function (visitorPK) {
+        console.log(visitorPK);
+        subscribeToVisitorChannel(visitorPK);
+    });
+}
+
+
+/**
+ * Subscribe to visitor's user channel. Request and receive status-change
+ */
+function subscribeToVisitorChannel(visitorPK) {
+    var visitorChannelName = makeUserChannelName(visitorPK);
+    var visitorChannel = pusher.subscribe(visitorChannelName);
+    bindRequestVisitorStatusEvent(visitorChannel, visitorChannelName);
+    bindReceiveCurrentStatusEvent(visitorChannel);
+}
+
+
 /************************************************************************
  * RoomChannel and UserRoomChannel ***************************************
  ************************************************************************/
@@ -788,26 +831,24 @@ function hideInSyncButton() {
 function subscribeToRoomChannel(roomPK) {
     roomChannelName = makeRoomChannelName(roomPK);
     roomChannel = pusher.subscribe(roomChannelName);
-
-    notifyLoginStatus(roomChannelName);
-    bindReplyStatusRequestEvent(roomChannel);
     bindRoomModificationEvent(roomChannel);
     bindNewCommentPostedEvent(roomChannel);
     bindInvitationAcceptedEvent(roomChannel);
-    allVisitors = getAllVisitorsPK();
-    for (var i = 0; i < allVisitors.length; i++) {
-        var userChannel = subscribeToUserChannel(allVisitors[i]);
-        bindReplyStatusRequestEvent(userChannel);
-    }
-    bindReceiveCurrentStatusEvent(roomChannel);
 }
 
-// TODO: iterate all users in the visitors sidebar and subscribe to receive current status event
 /**
  * Get all visitors pk
  */
 function getAllVisitorsPK() {
-
+    var visitors = $(".sidebar-user-box");
+    // TODO: in case of there is no visitor
+    visitors.each(
+        function (idx) {
+            var visitorPK = $(this).attr("id");
+            allVisitors.add(visitorPK);
+        }
+    );
+    return allVisitors;
 }
 
 /**
@@ -815,6 +856,7 @@ function getAllVisitorsPK() {
  */
 function bindReplyStatusRequestEvent(channelName) {
     channelName.bind('request-status', function (user) {
+        console.log("Status is requested by: " + user['requesterChannelName']);
         var requesterChannelName = user['requesterChannelName'];
         // notify the requester my current status
         notifyLoginStatus(requesterChannelName);
@@ -850,12 +892,15 @@ function bindNewCommentPostedEvent() {
 function bindInvitationAcceptedEvent() {
     roomChannel.bind('user_accepted', function (user) {
         var visitorList = $(".sidebar-nav");
-        var newUserItem = '<div class="sidebar-user-box" id="' + user['pk'] + '">' +
+        var newUserItem =
+            '<div class="sidebar-user-box" id="' + user['pk'] + '">' +
             '<img class="sidebar-user-photo" src="/static/rooms/img/user.jpeg"/>' +
             '<p class="sidebar-username">' + user['name'] + '</p>' +
-            '<p class="sidebar-userstatus offline">offline</p>' +
+            '<p class="sidebar-userstatus online">online</p>' +
             '</div>';
         visitorList.append(newUserItem);
+        allVisitors.add(user['pk']);
+        subscribeToVisitorChannel(user['pk']);
     })
 }
 
@@ -900,23 +945,21 @@ function removeStatus(element) {
 function subscribeToUserRoomChannel(userPK, roomPK) {
     userRoomChannelName = makeUserRoomChannel(userPK, roomPK);
     userRoomChannel = pusher.subscribe(userRoomChannelName);
-
-    bindRequestCurrentStatusEvent();
-    bindReceiveCurrentStatusEvent(userRoomChannel);
     bindSyncInvitationEvent();
 }
 
 /**
  * Request other users in the room to send their current status
  */
-function bindRequestCurrentStatusEvent() {
-    userRoomChannel.bind('pusher:subscription_succeeded', function () {
+function bindRequestVisitorStatusEvent(channel, channelName) {
+    channel.bind('pusher:subscription_succeeded', function () {
+        console.log("request visitor status with channel: " + channelName);
         $.ajax({
                 url: url_to_request_status,
                 type: 'GET',
                 data: {
-                    roomChannelName: roomChannelName,
-                    requesterChannelName: userRoomChannelName
+                    userChannelName: channelName,
+                    requesterChannelName: channelName
                 },
                 success: function (response) {
                 },
@@ -980,16 +1023,7 @@ function sendReplySyncInvitation(requestSyncID, reply) {
  * Utility ************************************************************************
  **********************************************************************************/
 
-function subscribeToUserChannel(userPK) {
-    userChannelName = makeUserChannelName(userPK);
-    userChannel = pusher.subscribe(channelName);
-    userChannel.bind('user_invited', function (invitation) {
-        console.log("received invitation message:");
-        console.log(invitation);
-        subscribeToRoomChannel(invitation['room_pk']);
-        showInvitation(invitation)
-    });
-}
+
 
 function makeUserChannelName(userPK) {
     return channelName = "user-" + userPK + "-channel";

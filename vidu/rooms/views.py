@@ -504,11 +504,11 @@ def request_status(request):
 	user = request.user
 	response_text = {}
 	if request.method == 'GET':
-		room_channel = request.GET['roomChannelName']
+		user_channel = request.GET['userChannelName']
 		requester_channel = request.GET['requesterChannelName']
 		response_text = convert_user_to_dict(user)
 		response_text['requesterChannelName'] = requester_channel
-		pusher.trigger(room_channel, 'request-status', response_text)
+		pusher.trigger(user_channel, 'request-status', response_text)
 
 	return HttpResponse(json.dumps(response_text), content_type='application/json')
 

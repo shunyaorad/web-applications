@@ -17,36 +17,21 @@ function initialize() {
         location.reload(true);
     }
     console.log("initializing");
+
+    Pusher.logToConsole = true; // For debugging
     pusher = new Pusher('c45513cf0c7e246ab1e6', {
         encrypted: true
     });
+    myStatus = 'online';
     setupUserChannel();
     setupRoomChannel();
+    notifyLoginStatus(userChannelName);
 }
 
 $(window).on('beforeunload', function (e) {
     myStatus = 'offline';
     notifyLoginStatus(userChannelName);
 });
-
-/**
- * Ajax to notify specified channel with my current login status
- */
-function notifyLoginStatus(channelName) {
-    $.ajax({
-            url: url_to_notify_status,
-            type: 'GET',
-            data: {
-                requesterChannelName: channelName,
-                status: myStatus
-            },
-            success: function (response) {
-            },
-            error: function (xhr, errmsg, err) {
-            }
-        }
-    );
-}
 
 function setupUserChannel() {
     subscribeToUserChannel(userPK);
