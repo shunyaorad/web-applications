@@ -974,7 +974,7 @@ function bindRequestVisitorStatusEvent(channel, channelName) {
  * Bind to request for sync event.
  */
 function bindSyncInvitationEvent() {
-    userRoomChannel.bind('sync-invited', function (invitation) {
+    userChannel.bind('sync-invited', function (invitation) {
         var requestSyncID = invitation['syncID'];
         var inviter = invitation['username'];
         setToastr("toast-bottom-right", false, "0");

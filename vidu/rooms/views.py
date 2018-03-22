@@ -478,7 +478,7 @@ def send_sync_invitation(request):
 		users = request.GET.getlist('users[]')
 		channels = []
 		for user in users:
-			channels.append(make_user_room_channel_name(user, room_pk))
+			channels.append(make_user_channel_name(user, room_pk))
 		pusher.trigger(channels, 'sync-invited', response_text)
 	return HttpResponse(json.dumps(response_text), content_type='application/json')
 
@@ -494,6 +494,10 @@ def notify_sync_channel(request):
 		event_name = request.GET['eventName']
 		pusher.trigger(requester_channel, event_name, response_text)
 	return HttpResponse(json.dumps(response_text), content_type='application/json')
+
+
+def make_user_channel_name(user_pk, room_pk):
+	return 'user-' + user_pk + '-channel'
 
 
 def make_user_room_channel_name(user_pk, room_pk):

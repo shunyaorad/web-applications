@@ -8,7 +8,7 @@ var myStatus = 'online';
 
 // Initialize tooltips
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip()
 });
 
 function initialize() {
@@ -36,6 +36,7 @@ $(window).on('beforeunload', function (e) {
 function setupUserChannel() {
     subscribeToUserChannel(userPK);
     bindReplyStatusRequestEvent();
+    bindSyncInvitationEvent();
 }
 
 function subscribeToUserChannel(userPK) {
@@ -272,6 +273,7 @@ function bindReplyStatusRequestEvent() {
         notifyLoginStatus(requesterChannelName);
     });
 }
+
 /**
  * Ajax to notify specified channel with my current login status
  */
@@ -321,6 +323,44 @@ function replySyncInvitation(reply, requestSyncID) {
     }
     toastr.clear(); //TODO: this will clear all toastrs. Clear only the current one.
     sendReplySyncInvitation(requestSyncID, reply);
+}
+
+/**
+ * Reply to sync invitation
+ */
+function replySyncInvitation(reply, requestSyncID) {
+    if (reply == "accept") {
+        syncID = requestSyncID;
+        subscribeToSyncChannel(syncID);
+    }
+    toastr.clear(); //TODO: this will clear all toastrs. Clear only the current one.
+    sendReplySyncInvitation(requestSyncID, reply);
+}
+
+/**
+ * Set toastr parameters
+ */
+function setToastr(position, tapToDismiss, timeOut) {
+    var progressBar = true;
+    if (timeOut == "0") {
+        progressBar = false;
+    }
+    toastr.options = {
+        "closeButton": true,
+        "positionClass": position,
+        "preventDuplicates": true,
+        "onclick": null,
+        "tapToDismiss": tapToDismiss,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": timeOut,
+        "extendedTimeOut": timeOut,
+        "progressBar": progressBar,
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
 }
 
 /**
