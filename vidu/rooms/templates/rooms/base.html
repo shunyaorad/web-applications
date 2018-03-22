@@ -35,19 +35,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainMenu">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link waves-effect waves-light" href="{% url 'home' %}">
-                                <div style="font-size:1em">
-                                    <i class="fas fa-home"></i> Home
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
                     <form class="form-inline waves-light waves-light" mdbRippleRadius>
                         {% csrf_token %}
-                        <input class="search-bar form-control mr-sm-2" type="text" placeholder="Search Rooms" aria-label="Search">
+                        <input class="search-bar form-control mr-sm-2" type="text" placeholder="Search your rooms and friends" aria-label="Search">
                         <button class="btn btn-light-blue btn-sm my-0 waves-light" type="submit" mdbRippleRadius>
                             <i class="fas fa-search"></i>
                         </button>
@@ -60,11 +50,11 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+                            <a class="nav-link" href="#" id="userMenu" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
-                                {{ user.username }}
+                                <i class="fas fa-user"></i> {{ user.username }}
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                            <div class="dropdown-menu" aria-labelledby="userMenu">
                                 <a class="dropdown-item" href="{% url 'settings' %}">My account</a>
                                 <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
                                 <div class="dropdown-divider"></div>
@@ -72,6 +62,24 @@
                             </div>
                         </li>
                     </ul>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link waves-effect waves-light" href="{% url 'home' %}" data-toggle="tooltip" data-placement="bottom" title="Home">
+                                    <i class="fas fa-home"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-effect waves-light" href="#" data-toggle="tooltip" data-placement="bottom" title="Comments">
+                                    <i class="fas fa-comments"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-effect waves-light" href="#" data-toggle="tooltip" data-placement="bottom" title="Notifications">
+                                    <i class="fas fa-bell"></i>
+                            </a>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </nav>
@@ -132,6 +140,7 @@
 <script src="{% static 'rooms/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'rooms/js/mdb.min.js' %}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="{% static 'rooms/js/base.js' %}"></script>
 {% block javascript %}
 {% endblock %}
 </body>

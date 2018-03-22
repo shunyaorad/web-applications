@@ -132,7 +132,6 @@ function setupButtonClickEvents() {
             }
         }
         if (selectedVisitors.size > 0) {
-            console.log("show buttons");
             showVisitorsButtons();
         }
         else if (selectedVisitors.size == 0) {
@@ -808,7 +807,6 @@ function subscribeToUserChannel() {
 function subscribeToAllVisitorsUserChannels() {
     allVisitors = getAllVisitorsPK();
     allVisitors.forEach(function (visitorPK) {
-        console.log(visitorPK);
         subscribeToVisitorChannel(visitorPK);
     });
 }
@@ -866,7 +864,6 @@ function getAllVisitorsPK() {
  */
 function bindReplyStatusRequestEvent(channelName) {
     channelName.bind('request-status', function (user) {
-        console.log("Status is requested by: " + user['requesterChannelName']);
         var requesterChannelName = user['requesterChannelName'];
         // notify the requester my current status
         notifyLoginStatus(requesterChannelName);
@@ -963,7 +960,6 @@ function subscribeToUserRoomChannel(userPK, roomPK) {
  */
 function bindRequestVisitorStatusEvent(channel, channelName) {
     channel.bind('pusher:subscription_succeeded', function () {
-        console.log("request visitor status with channel: " + channelName);
         $.ajax({
                 url: url_to_request_status,
                 type: 'GET',

@@ -8,6 +8,8 @@ body {
 
 a.nav-link.waves-effect.waves-light, a#userMenu {
     margin-left: 20px;
+    padding: 0;
+    font-size: 1.0rem;
     /*margin-right: 20px;*/
 }
 
