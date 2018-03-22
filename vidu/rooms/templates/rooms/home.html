@@ -13,9 +13,9 @@
     {% for connection in connections %}
         <!-- Grid column -->
         {% if connection.visible is True %}
-            <div class="visible-room connection room-card col-lg-4 col-md-12">
+            <div class="visible-room connection room-card col-lg-4 col-md-12" id="{{ connection.room.pk }}">
         {% else %}
-            <div class="invitation connection room-card col-lg-4 col-md-12">
+            <div class="invitation connection room-card col-lg-4 col-md-12" id="{{ connection.room.pk }}">
         {% endif %}
     <!--Card-->
     <div class="card" style="margin-top: 28px;">
@@ -23,7 +23,7 @@
         <div class="view">
 
             {% if connection.visible is True %}
-                <a href="{% url 'show_room' connection.room.pk %}">
+                <a href="{% url 'show_room' connection.room.pk %}" class="room-{{ connection.room.pk }}">
                     <img src="http://img.youtube.com/vi/{{ connection.room.video_id }}/mqdefault.jpg"
                          class="img-fluid"
                          alt="video-thumbnail">
@@ -52,7 +52,7 @@
                     <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
                         <div class="modal-content text-center">
                             <div class="modal-header d-flex justify-content-center">
-                                <p class="heading">Are you sure to delete the room {{ connection.room.name }}?</p>
+                                <p class="heading">Are you sure to delete room : {{ connection.room.name }}?</p>
                             </div>
                             <div class="modal-body">
                                 <i class="fa fa-times fa-4x animated rotateIn"></i>
@@ -74,11 +74,13 @@
             <!--Title-->
             <h4 class="card-title">
                 {% if connection.visible is True %}
-                    <a href="{% url 'show_room' connection.room.pk %}">
+                    <a href="{% url 'show_room' connection.room.pk %}"  id="room-{{ connection.room.pk }}">
                         {{ connection.room.name }}
                     </a>
                 {% else %}
-                    {{ connection.room.name }}
+                    <a id="room-{{ connection.room.pk }}">
+                        {{ connection.room.name }}
+                    </a>
                 {% endif %}
             </h4>
             <p>{{ connection.room.room_description }}</p>

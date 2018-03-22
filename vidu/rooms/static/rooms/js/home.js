@@ -43,8 +43,6 @@ function subscribeToUserChannel(userPK) {
     userChannelName = makeUserChannelName(userPK);
     userChannel = pusher.subscribe(userChannelName);
     userChannel.bind('user_invited', function (invitation) {
-        console.log("received invitation message:");
-        console.log(invitation);
         subscribeToRoomChannel(invitation['room_pk']);
         showInvitation(invitation)
     });
@@ -65,14 +63,16 @@ function subscribeToRoomChannel(roomPK) {
     var channelName = makeRoomChannelName(roomPK);
     var roomChannel = pusher.subscribe(channelName);
     roomChannel.bind('room_modified', function (modification) {
-        console.log("room " + roomPK + " is modified:");
-        console.log(modification);
+        console.log("room modification received");
         if (modification['type'] == 'modification') {
-            console.log('modify room parameter');
-            $('#' + modification['room_pk'] + " .room-name").text(modification['name']);
-            $('#' + modification['room_pk'] + " .room-url").text(modification['video_url']);
+            console.log("room changes either name or url");
+            $('#room-' + modification['room_pk']).text(modification['name']);
+            // TODO: modify the url to the room
+            $('#room-' + modification['room_pk']).attr("href", modification['video_url']);
+            // TODO: modify the thumbnail
+            // TODO: also if this is the invitation, do not modify the url
         } else if (modification['type'] == 'delete') {
-            console.log('room deleted by owner');
+            console.log("room is deleted");
             $('#' + modification['room_pk']).remove();
         }
     });
@@ -120,7 +120,7 @@ function showRoom(room) {
         '<div class="modal-dialog modal-sm modal-notify modal-danger" role="document">' +
         '<div class="modal-content text-center">' +
         '<div class="modal-header d-flex justify-content-center">' +
-        '<p class="heading">Are you sure to delete the room ' + room['name'] + '?</p>' +
+        '<p class="heading">Are you sure to delete the room :' + room['name'] + '?</p>' +
         '</div>' +
         '<div class="modal-body">' +
         '<i class="fa fa-times fa-4x animated rotateIn"></i>' +
@@ -190,7 +190,6 @@ function deleteRoom(roomToDeletee, srcElement) {
  * @param invitation
  */
 function showInvitation(room) {
-    console.log("showing invitation");
     var visibleRoomTable = $(".card-list");
     var newInvitationHTML = '<div class="invitation connection room-card col-lg-4 col-md-12">' +
         '<div class="card" style="margin-top: 28px">' +
@@ -204,10 +203,8 @@ function showInvitation(room) {
         '<input onClick="respond_invitation(event)" type="submit" class="btn btn-danger invitation-response" value="Reject" name="' + room['room_pk'] + '">' +
         '</div></div></div>';
     if (roomExists()) {
-        console.log("visible room exists. append after");
         $(newInvitationHTML).insertAfter($(".visible-room").last());
     } else {
-        console.log("no visible room exists. appeend invitation");
         visibleRoomTable.append(newInvitationHTML);
     }
 }
@@ -247,8 +244,6 @@ function respond(responseRoomPK, response, srcElement) {
             success: function (room) {
                 $(srcElement).closest(".room-card").remove(); // remove the invitation
                 if (response == 'Accept') {
-                    console.log("accepted invitation");
-                    console.log(room);
                     showRoom(room);
                     subscribeToRoomChannel(room['room_pk']);
                 }
@@ -324,7 +319,6 @@ function replySyncInvitation(reply, requestSyncID) {
 function jumpToRoomWithSyncMode(syncID) {
     var jumpRoomPK = syncID.split("-")[1];
     var roomURL = url_to_show_room.replace(/0/, jumpRoomPK) + syncID;
-    console.log("Jumping to " + roomURL);
     document.location.href = roomURL;
 }
 
